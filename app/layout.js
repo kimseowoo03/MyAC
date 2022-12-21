@@ -1,9 +1,10 @@
+import Header from '../component/Header';
 export default function RootLayout({ children }) {
   return (
     <html>
       <head />
       <body>
-        <p>레이아웃으로 감싸기</p>
+        <Header />
         {children}
         </body>
     </html>
