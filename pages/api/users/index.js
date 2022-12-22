@@ -1,5 +1,5 @@
 import connectMongo from "../../../db/connectMongo"
-import { getUsers } from "../../../db/controller";
+import { getUsers, postUser } from "../../../db/controller";
 
 export default function handler(req, res) {
   connectMongo().catch(() => res.status(405).json({ error: "Error in the Connection"}))
@@ -11,7 +11,7 @@ export default function handler(req, res) {
       getUsers(req, res)
       break;
     case "POST":
-      res.status(200).json({ method, name: "POST Req" });
+      postUser(req, res)
       break;
     case "PUT":
       res.status(200).json({ method, name: "PUT Req" });
