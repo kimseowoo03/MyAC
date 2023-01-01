@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "classnames": "^2.3.2",
     "mongoose": "^6.8.0",
     "next": "13.0.6",

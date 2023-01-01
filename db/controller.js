@@ -14,10 +14,12 @@ export async function getUsers(req,res) {
 
 export async function postUser(req, res){
   try {
-    const userData = req.body;
-    if(!userData) return res.status(404).json({error: "데이터가 없습니다."});
-    Users.create(userData, function(err, data){
-      return res.status(200).json(data)
+    const user = new Users(req.body);
+    if(!user) return res.status(404).json({error: "데이터가 없습니다."});
+    
+    user.save((err, result) => {
+      if(err) return res.status(404).json({err})
+      return res.status(200).json(result)
     })
   } catch (error) {
     res.status(404).json(error)
