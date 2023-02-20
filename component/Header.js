@@ -17,8 +17,7 @@ const Header = () => {
           <ul className={classNames(style.nav_menu, {[style.display_none]: isToggleBtn})}>
             <li><a>홈</a></li>
             <li><a>학점이수계획표</a></li>
-            <li><a>아직미정</a></li>
-            <li><a>아직미정</a></li>
+            <li><a>학점성적계산기</a></li>
           </ul>
           <ul className={classNames(style.nav_userMenu, {[style.display_none]: isToggleBtn})}>
             <li><a>로그인</a></li>
