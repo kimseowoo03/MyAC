@@ -1,11 +1,5 @@
-import Header from "../component/Header";
-
 function Home(props) {
-  return (
-    <>
-      <Header />
-    </>
-  );
+  return <></>;
 }
 
 export default Home;
