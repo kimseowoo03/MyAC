@@ -1,13 +1,10 @@
 import { useState } from "react";
-
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
 function Register() {
-  const [inputValue, setInputValue] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,9 +17,14 @@ function Register() {
     console.log("회원가입 버튼 클릭");
   };
 
-  const onChange = (event) => {
-    const { value, name } = event.target;
-    setInputValue({ ...inputValue, [name]: value });
+  const onNameChange = (event) => {
+    setName(event.target.value);
+  };
+  const onEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+  const onPasswordChange = (event) => {
+    setPassword(event.target.value);
   };
 
   return (
@@ -31,20 +33,15 @@ function Register() {
       <form onSubmit={onSubmitHandler}>
         <div>
           <label>이름</label>
-          <input
-            type="text"
-            name="name"
-            value={inputValue.name}
-            onChange={onChange}
-          />
+          <input type="text" name="name" value={name} onChange={onNameChange} />
         </div>
         <div>
           <label>이메일</label>
           <input
             type="email"
             name="email"
-            value={inputValue.email}
-            onChange={onChange}
+            value={email}
+            onChange={onEmailChange}
           />
         </div>
         <div>
@@ -52,8 +49,8 @@ function Register() {
           <input
             type={showPassword ? "text" : "password"}
             name="password"
-            value={inputValue.password}
-            onChange={onChange}
+            value={password}
+            onChange={onPasswordChange}
           />
           {showPassword ? (
             <AiFillEye onClick={showPasswordToggle} />
