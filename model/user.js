@@ -1,11 +1,11 @@
 import { Schema, models, model } from "mongoose";
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
 const userSchema = new Schema({
   name: String,
   email: String,
-  password: String
+  password: String,
 });
 
 userSchema.pre("save", function (next) {
@@ -21,9 +21,11 @@ userSchema.pre("save", function (next) {
         next();
       });
     });
+  } else {
+    next();
   }
 });
 
-const Users = models.user || model('user', userSchema)
+const Users = models.user || model("user", userSchema);
 
 export default Users;
