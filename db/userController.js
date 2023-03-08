@@ -15,15 +15,10 @@ export async function getUsers(req, res) {
 
 export async function postUser(data) {
   try {
-    const user = await new Users(data);
+    const user = new Users(data);
     if (!user) return { code: 404 };
 
-    let result = await new Promise((resolve, reject) => {
-      user.save((err, result) => {
-        if (err) reject(new Error(err));
-        resolve(result);
-      });
-    });
+    const result = await user.save();
     return { code: 200, data: result };
   } catch (error) {
     return { code: 404, err: error };
