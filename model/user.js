@@ -1,5 +1,6 @@
 import { Schema, models, model } from "mongoose";
-const bcrypt = require("bcrypt");
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 const saltRounds = 10;
 
 const userSchema = new Schema({
@@ -25,6 +26,21 @@ userSchema.pre("save", function (next) {
     next();
   }
 });
+
+userSchema.methods.comparePassword = function (plainPassword, cb) {
+  bcrypt.compare(plainPassword, this.password, function (err, isMatch) {
+    if (err)
+      return (
+        cb(err),
+        // cb(err, isMatch)
+        cb(null, isMatch)
+      );
+  });
+};
+
+userSchema.method.generateToken = function (cb) {
+  //JWT 생성
+};
 
 const Users = models.user || model("user", userSchema);
 

@@ -24,3 +24,26 @@ export async function postUser(data) {
     return { code: 404, err: error };
   }
 }
+
+export async function getUser(userData) {
+  try {
+    const user = await Users.findOne({ email: userData.email });
+    if (!user)
+      return {
+        loginSuccess: false,
+        message: "이메일에 해당하는 유저가 없습니다.",
+      };
+    console.log(user, "사용자가 있음");
+
+    // 요청된 비밀번호와 암호화된 비밀번호 일치한지 확인
+    user.comparePassword(userData.password, (err, isMatch) => {
+      if (!isMatch)
+        return { loginSuccess: false, message: "비밀번호가 틀렸습니다." };
+
+      //비밀번호까지 맞다면 토큰 생성
+      user.generateToken((err, user) => {});
+    });
+  } catch (error) {
+    return { code: 404, err: error };
+  }
+}

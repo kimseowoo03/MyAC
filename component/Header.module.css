@@ -1,79 +1,70 @@
-.header {
+ .nav {
+  margin: 0 auto;
+  padding: 10px 12px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
 }
-
-.nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 68rem;
-}
-
-.nav h1 {
+.nav_loge{
   font-size: 1.75rem;
-  margin-left: 40px;
 }
-
+.nav_loge a {
+  text-decoration: none;
+  color: inherit;
+}
 .nav_menu {
+  font-size: 0.875rem;
   display: flex;
-  list-style: none;
+  gap: 40px;
+  padding: 0;
 }
-
 .nav_menu li {
-  padding: 8px 30px;
-  font-size: 0.875rem;
-}
-
-.nav_userMenu {
-  display: flex;
   list-style: none;
-  padding: 8px 10px;
-  font-size: 0.875rem;
-  margin-right: 40px;
 }
 
-.nav_toogleBtn {
+.nav_user{
+  display: flex;
+  font-size: 0.875rem;
+}
+
+.nav_toogleBtn{
   display: none;
   position: absolute;
-  right: 32px;
-  top: 20px;
+  right: 10px;
+  font-size: 1.875rem;
 }
-
+@media (min-width: 1200px) {
+  .nav{
+    width: 1200px;
+  }
+}
 @media screen and (max-width: 768px) {
-  .nav {
+  .nav{
     flex-direction: column;
     align-items: flex-start;
   }
-
-  .nav h1 {
-    font-size: 1.5rem;
-  }
-
   .nav_menu {
+    margin: 30px 0;
+    gap: 30px;
     flex-direction: column;
     align-items: center;
-    padding: 0;
     width: 100%;
-    margin: 0;
   }
-
-  .display_none {
-    display: none;
-  }
-
-  .nav_userMenu {
+  .nav_user{
+    margin-bottom: 20px;
     justify-content: center;
     width: 100%;
   }
-
-  .nav_toogleBtn {
+  .nav_toogleBtn{
     display: block;
-    font-size: 1.875rem;
+    cursor: pointer;
+  }
+  .display_none{
+    display: none;
   }
 }
