@@ -1,17 +1,17 @@
 import { useState } from "react";
 
-import style from "./Header.module.css";
+import style from "../styles/Header.module.css";
 import { FiMenu, FiX } from "react-icons/fi";
 
 const Header = () => {
-  const [isToggleBtn, setIsToggleBtn] = useState(true);
+  const [isToggled, setIsToggled] = useState(true);
 
   const onClickMenuBtn = () => {
-    setIsToggleBtn(!isToggleBtn);
+    setIsToggled(!isToggled);
   };
 
-  const navMenuStyle = isToggleBtn ? style.nav_menu : style.display_none
-  const navUserStyle = isToggleBtn ? style.nav_user : style.display_none
+  const navMenuStyle = isToggled ? style.nav_menu : style.display_none
+  const navUserStyle = isToggled ? style.nav_user : style.display_none
 
   return (
     <header className={style.header}>
@@ -34,7 +34,7 @@ const Header = () => {
           <a>로그인</a>
         </div>
         <a className={style.nav_toogleBtn}>
-          {isToggleBtn ? <FiX onClick={onClickMenuBtn} className={style.nav_toogleBtn} />:<FiMenu onClick={onClickMenuBtn} className={style.nav_toogleBtn} />  }
+          {isToggled ? <FiX onClick={onClickMenuBtn} className={style.nav_toogleBtn} />:<FiMenu onClick={onClickMenuBtn} className={style.nav_toogleBtn} />  }
         </a>
       </nav>
     </header>
