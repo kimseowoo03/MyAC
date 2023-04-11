@@ -1,4 +1,5 @@
 import { Schema, models, model } from "mongoose";
+
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
@@ -7,10 +8,11 @@ const userSchema = new Schema({
   name: String,
   email: String,
   password: String,
+  token: String,
 });
 
 userSchema.pre("save", function (next) {
-  var user = this;
+  let user = this;
 
   if (user.isModified("password")) {
     bcrypt.genSalt(saltRounds, function (err, salt) {
@@ -27,19 +29,30 @@ userSchema.pre("save", function (next) {
   }
 });
 
-userSchema.methods.comparePassword = function (plainPassword, cb) {
-  bcrypt.compare(plainPassword, this.password, function (err, isMatch) {
-    if (err)
-      return (
-        cb(err),
-        // cb(err, isMatch)
-        cb(null, isMatch)
-      );
-  });
+userSchema.methods.comparePassword = async function (plainPassword) {
+  try {
+    const same = await bcrypt.compare(plainPassword, this.password);
+    return same;
+  } catch (error) {
+    throw error;
+  }
 };
 
-userSchema.method.generateToken = function (cb) {
-  //JWT 생성
+userSchema.methods.tokenGenerate = async function () {
+  try {
+    // JWT 생성
+    let user = this;
+    // 시크릿 토큰 나중에 env로 빼서 설정
+    let payload = {"id": user._id.toHexString(), "name": user.name}
+    let token = jwt.sign(payload, "secretToken");
+
+    // // DB에 토큰 저장
+    user.token = token;
+    await user.save();
+    return token;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const Users = models.user || model("user", userSchema);
