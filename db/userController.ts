@@ -1,21 +1,21 @@
 /**userController */
 import { serialize } from "cookie";
-import Users from "../model/user";
+import Users, { User } from "../model/user";
 
-export async function getUsers(req, res) {
-  try {
-    const users = await Users.find({});
+export interface UserResponse {
+  loginSuccess?: boolean;
+  message?: string;
+  code?: number;
+  cookie?: string;
+};
 
-    if (!users)
-      return res.status(404).json({ error: "데이터를 찾을 수 없습니다." });
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(404).json(error);
-  }
+interface PostUserResponse extends UserResponse {
+  data?: Partial<User> & { _id: string }
 }
 
+
 //register
-export async function postUser(data) {
+export async function postUser(data: User):Promise<PostUserResponse | undefined> {
   try {
     const user = new Users(data);
     if (!user) return { code: 404 };
@@ -23,12 +23,12 @@ export async function postUser(data) {
     const result = await user.save();
     return { code: 200, data: result };
   } catch (error) {
-    return { code: 404, err: error };
+    return { code: 500, message:  `${error}오류 입니다.` };
   }
 }
 
 //login
-export async function getUser(userData) {
+export async function getUser(userData: User):Promise<UserResponse | undefined> {
   try {
     const user = await Users.findOne({ email: userData.email });
 
@@ -40,7 +40,10 @@ export async function getUser(userData) {
 
     // 요청된 비밀번호와 암호화된 비밀번호 일치한지 확인
     const isMatch = await user.comparePassword(userData.password);
-      if (!isMatch) return console.log("일치하지않음");
+    if (!isMatch) {
+       console.log("일치하지않음");
+       return { loginSuccess: false, message: "비밀번호가 일치하지 않습니다"}
+    }
 
     const jwt = await user.tokenGenerate();
 
@@ -51,8 +54,9 @@ export async function getUser(userData) {
       path: "/",
     });
     
-    return {code: 200, cookie}
+    return {loginSuccess: true, code: 200, cookie}
   } catch (error) {
-    return console.log(error)
+    console.log(error)
+    return;
   }
 }

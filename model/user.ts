@@ -1,17 +1,26 @@
-import { Schema, models, model } from "mongoose";
+import { Document, Model, Schema, models, model } from "mongoose";
 
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
-const userSchema = new Schema({
+export interface User extends Document{
+  name?: string;
+  email: string;
+  password: string;
+  token?: string;
+  comparePassword: (plainPassword: string) => Promise<boolean>;
+  tokenGenerate: () => Promise<string>;
+}
+
+const userSchema = new Schema<User>({
   name: String,
   email: String,
   password: String,
   token: String,
 });
 
-userSchema.pre("save", function (next) {
+userSchema.pre<User>("save", function (next) {
   let user = this;
 
   if (user.isModified("password")) {
@@ -29,7 +38,7 @@ userSchema.pre("save", function (next) {
   }
 });
 
-userSchema.methods.comparePassword = async function (plainPassword) {
+userSchema.methods.comparePassword = async function (plainPassword: string) {
   try {
     const same = await bcrypt.compare(plainPassword, this.password);
     return same;
@@ -55,6 +64,6 @@ userSchema.methods.tokenGenerate = async function () {
   }
 };
 
-const Users = models.user || model("user", userSchema);
+const Users: Model<User> = models.user || model<User>("user", userSchema);
 
 export default Users;
