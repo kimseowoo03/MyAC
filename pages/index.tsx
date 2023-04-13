@@ -1,4 +1,4 @@
-function Home(props) {
+function Home() {
   return <></>;
 }
 

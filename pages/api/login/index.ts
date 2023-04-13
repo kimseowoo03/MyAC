@@ -13,11 +13,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       console.log(result);
       if (!result || !result.loginSuccess) {
         res.status(500).json({ message: result?.message });
-      } else if (result.code == 200) {
-        if (result.cookie) {
+      } else if (result.code == 200 && result.cookie) {
           res.setHeader("Set-Cookie", result.cookie);
-        }
-        res.json({ message: "Logged in successfully" });
+          res.json({ message: "Logged in successfully" });
       } else {
         res.status(result.code!).json({ error: result.message });
       }
