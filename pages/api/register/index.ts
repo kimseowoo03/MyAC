@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import connectMongo from "../../../db/connectMongo";
 import { postUser } from "../../../db/userController";
-import { User } from "../../../model/user";
+import { IUser } from "../../../model/user";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try{
@@ -11,7 +11,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   
   const { method } = req;
   if (method === "POST") {
-    const data: User = req.body; // TODO: Input field
+    const data: IUser = req.body; // TODO: Input field
 
     const result = await postUser(data);
 

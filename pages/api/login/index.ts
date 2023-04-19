@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import connectMongo from "../../../db/connectMongo";
 import { getUser } from "../../../db/userController";
-import { User } from "../../../model/user";
+import { IUser } from "../../../model/user";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -9,7 +9,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     const { method } = req;
     if (method === "POST") {
-      const result = await getUser(req.body as User);
+      const result = await getUser(req.body as IUser);
       console.log(result);
       if (!result || !result.loginSuccess) {
         res.status(500).json({ message: result?.message });

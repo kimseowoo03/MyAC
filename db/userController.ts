@@ -1,6 +1,6 @@
 /**userController */
 import { serialize } from "cookie";
-import Users, { User } from "../model/user";
+import User, { IUser } from "../model/user";
 
 export interface UserResponse {
   loginSuccess?: boolean;
@@ -10,14 +10,14 @@ export interface UserResponse {
 };
 
 interface PostUserResponse extends UserResponse {
-  data?: Partial<User> & { _id: string }
+  data?: Partial<IUser> & { _id: string }
 }
 
 
 //register
-export async function postUser(data: User):Promise<PostUserResponse | undefined> {
+export async function postUser(data: IUser):Promise<PostUserResponse | undefined> {
   try {
-    const user = new Users(data);
+    const user = new User(data);
     if (!user) return { code: 404 };
 
     const result = await user.save();
@@ -28,9 +28,9 @@ export async function postUser(data: User):Promise<PostUserResponse | undefined>
 }
 
 //login
-export async function getUser(userData: User):Promise<UserResponse | undefined> {
+export async function getUser(userData: IUser):Promise<UserResponse | undefined> {
   try {
-    const user = await Users.findOne({ email: userData.email });
+    const user = await User.findOne({ email: userData.email });
 
     if (!user)
       return {
@@ -44,7 +44,6 @@ export async function getUser(userData: User):Promise<UserResponse | undefined> 
        console.log("일치하지않음");
        return { loginSuccess: false, message: "비밀번호가 일치하지 않습니다"}
     }
-
     const jwt = await user.tokenGenerate();
 
     const cookie = serialize("token", jwt, {

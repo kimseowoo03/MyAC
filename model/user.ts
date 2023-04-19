@@ -4,23 +4,24 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
-export interface User extends Document{
+export interface IUser extends Document{
   name?: string;
   email: string;
   password: string;
   token?: string;
   comparePassword: (plainPassword: string) => Promise<boolean>;
   tokenGenerate: () => Promise<string>;
+  findByToken: (token: string) => Promise<string>;
 }
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<IUser>({
   name: String,
   email: String,
   password: String,
   token: String,
 });
 
-userSchema.pre<User>("save", function (next) {
+userSchema.pre<IUser>("save", function (next) {
   let user = this;
 
   if (user.isModified("password")) {
@@ -64,6 +65,20 @@ userSchema.methods.tokenGenerate = async function () {
   }
 };
 
-const Users: Model<User> = models.user || model<User>("user", userSchema);
+userSchema.methods.findByToken = async function (token: string) {
+  try {
+    let user = this;
+    //토큰 복호화
+    let decoded =  jwt.verify(token, "secretToken"); // user id가 나옴
 
-export default Users;
+    //복화화 해서 나온 유저 id가 DB에도 있는지 확인, 토큰까지 일치하는지 확인
+    let matchedUser = await user.findOne({ _id: decoded, token: token });
+    return matchedUser;
+  } catch (error) {
+    return error;
+  }
+};
+
+const User: Model<IUser> = models.user || model<IUser>("user", userSchema);
+
+export default User;
