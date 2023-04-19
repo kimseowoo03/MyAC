@@ -1,6 +1,6 @@
 import { Document, Model, Schema, models, model } from "mongoose";
 
-import jwt from "jsonwebtoken";
+import jwt  from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
@@ -11,7 +11,6 @@ export interface IUser extends Document{
   token?: string;
   comparePassword: (plainPassword: string) => Promise<boolean>;
   tokenGenerate: () => Promise<string>;
-  findByToken: (token: string) => Promise<string>;
 }
 
 const userSchema = new Schema<IUser>({
@@ -62,20 +61,6 @@ userSchema.methods.tokenGenerate = async function () {
     return token;
   } catch (error) {
     throw error;
-  }
-};
-
-userSchema.methods.findByToken = async function (token: string) {
-  try {
-    let user = this;
-    //토큰 복호화
-    let decoded =  jwt.verify(token, "secretToken"); // user id가 나옴
-
-    //복화화 해서 나온 유저 id가 DB에도 있는지 확인, 토큰까지 일치하는지 확인
-    let matchedUser = await user.findOne({ _id: decoded, token: token });
-    return matchedUser;
-  } catch (error) {
-    return error;
   }
 };
 
