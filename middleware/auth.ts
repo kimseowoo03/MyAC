@@ -2,11 +2,13 @@ import jwt from "jsonwebtoken";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import User from "../model/user";
 import { Types } from "mongoose";
+import connectMongo from "../db/connectMongo";
 
 interface DecodedToken {
-  id: string;
-  name: string;
+  id: string,
+  name: string
   iat: number;
+  exp: number;
 }
 
 export interface ExtendedNextApiRequest extends NextApiRequest {
@@ -14,7 +16,7 @@ export interface ExtendedNextApiRequest extends NextApiRequest {
   user?: any;
 }
 
-const verifyToken = (token: string): DecodedToken | null => {
+export const verifyToken = (token: string): DecodedToken | null => {
   try {
     const decoded = jwt.verify(token, "secretToken");
     return decoded as DecodedToken;
@@ -27,17 +29,18 @@ const authMiddleware =
   (handler: NextApiHandler) =>
   async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     try {
+      await connectMongo();
       // 쿠키에서 인증 토큰 가져오기
-      const token = req.cookies.token;
+      const refreshToken = req.cookies.refreshToken;
       console.log("미들웨어입니다.");
 
-      if (!token) {
+      if (!refreshToken) {
         res.status(401).json({ message: "Token이 없습니다." });
         return;
       }
 
       // 인증 토큰 복호화 하기
-      const decoded = verifyToken(token);
+      const decoded = verifyToken(refreshToken);
 
       // 인증 토큰이 올바르지 않으면 401 Unauthorized 반환
       if (!decoded) {
@@ -54,9 +57,11 @@ const authMiddleware =
       if (!matchedUser) {
         return { isAuth: false, message: "해당 유저가 없습니다." };
       }
-      req.token = token;
+
+      req.token = refreshToken;
       req.user = matchedUser;
-      // 다음 미들웨어 또는 핸들러 실행
+      console.log("미들웨어 작업 완료")
+      // 핸들러 실행
       return await handler(req, res);
     } catch (err) {
       res.status(500).json({ message: "Internal Server Error" });

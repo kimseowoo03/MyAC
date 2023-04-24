@@ -7,7 +7,7 @@ const apiHandler: NextApiHandler = async (
   res: NextApiResponse
 ) => {
   try {
-    console.log("핸들러", req.token, req.user);
+    console.log("핸들러");
     res.status(200).json({
       _id: req.user._id,
       isAuth: true,
