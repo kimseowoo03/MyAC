@@ -4,13 +4,18 @@ import jwt  from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
 
+interface tokenObject {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface IUser extends Document{
   name?: string;
   email: string;
   password: string;
   token?: string;
   comparePassword: (plainPassword: string) => Promise<boolean>;
-  tokenGenerate: () => Promise<string>;
+  tokenGenerate: () => Promise<tokenObject>;
 }
 
 const userSchema = new Schema<IUser>({
@@ -52,13 +57,18 @@ userSchema.methods.tokenGenerate = async function () {
     // JWT 생성
     let user = this;
     // 시크릿 토큰 나중에 env로 빼서 설정
-    let payload = {"id": user._id.toHexString(), "name": user.name}
-    let token = jwt.sign(payload, "secretToken");
 
-    // // DB에 토큰 저장
-    user.token = token;
+    //accessToken 생성
+    let accessTokenPayload = { id: `${user._id.toHexString()}`, name: `${user.name}`}
+    const accessToken = jwt.sign(accessTokenPayload, "secretToken", { expiresIn: '30m' });
+
+    //refreshToken 생성
+    const refreshToken = jwt.sign(accessTokenPayload, "secretToken", {expiresIn: '120d'});
+
+    // // DB에 refreshToken 저장
+    user.token = refreshToken;
     await user.save();
-    return token;
+    return {accessToken, refreshToken};
   } catch (error) {
     throw error;
   }
