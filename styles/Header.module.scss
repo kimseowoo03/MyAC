@@ -10,21 +10,23 @@
   right: 0;
   background-color: rgb(255, 255, 255);
 }
+
 .nav_loge{
   font-size: 1.75rem;
+  font-weight: 600;
+  color: #2B2E45;;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 }
-.nav_loge a {
-  text-decoration: none;
-  color: inherit;
-}
-.nav_menu {
+
+.nav_menu, .display_none {
+  list-style: none;
   font-size: 0.875rem;
   display: flex;
-  gap: 40px;
+  gap: 60px;
   padding: 0;
-}
-.nav_menu li {
-  list-style: none;
 }
 
 .nav_user{
@@ -38,11 +40,13 @@
   right: 10px;
   font-size: 1.875rem;
 }
+
 @media (min-width: 1200px) {
   .nav{
     width: 1200px;
   }
 }
+
 @media screen and (max-width: 768px) {
   .nav{
     flex-direction: column;
