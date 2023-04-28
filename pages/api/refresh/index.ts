@@ -1,25 +1,17 @@
-import { NextApiResponse } from "next";
-import { ExtendedNextApiRequest } from "../../../middleware/auth";
+import { NextApiHandler, NextApiResponse } from "next";
+import authMiddleware, { ExtendedNextApiRequest } from "../../../middleware/auth";
 import { regenerateToken } from "../../../db/userController";
-import connectMongo from "../../../db/connectMongo";
-export default async function handler(
+
+const regenerateAccessTokenHandler: NextApiHandler = async (
   req: ExtendedNextApiRequest,
   res: NextApiResponse
-) {
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "Method Not Allowed" });
-    return;
-  }
-
+) => {
   try {
-    await connectMongo();
-    //헤더 쿠키에 refreshToken 가져와서 유저 정보 찾기
-    const refreshToken = req.cookies.refreshToken;
-    // const authHeader = req.headers.authorization
-    // const accessToken = authHeader?.split(' ')[1]
+    // auth 미들웨어 통과 했으므로 유저 인증 완료.
+    console.log("미들웨어 통과 인증 됐어요.")
 
-    // regenerateAccessToken함수에 efreshtoken 넘겨서 Access 재발급 하기
-    const result = await regenerateToken(refreshToken);
+    // regenerateAccessToken함수에 refreshtoken 넘겨서 Access 재발급 하기
+    const result = await regenerateToken(req.token);
 
     if (result.error) {
       res.status(result.code).json({ error: result.error });
@@ -35,3 +27,5 @@ export default async function handler(
     res.status(405).json({ error: "Error in the Connection" });
   }
 }
+
+export default authMiddleware(regenerateAccessTokenHandler);
