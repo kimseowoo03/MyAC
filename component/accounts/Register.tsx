@@ -3,7 +3,7 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import useInput from "../../hooks/useInput";
 import Input from "../Input";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import style from "../../styles/Register.module.scss";
 
@@ -13,7 +13,10 @@ function Register() {
   const password = useInput("");
   const confirmPassword = useInput("");
 
+  const [duplicateEmail, setDuplicateEmail] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const showPasswordToggle = () => {
@@ -23,6 +26,37 @@ function Register() {
   const  handleConfirmPasswordBlur = () => {
     setPasswordMatch(password.value === confirmPassword.value)
   }
+
+  const  handlePasswordBlur = () => {
+    let reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/
+    setIsPasswordValid(reg.test(password.value.toString()))
+  }
+
+  const handleEmailExistence = async () => {
+    try {
+      const res = await axios.post("/api/check-email-exist", {
+        email: email.value,
+      });
+      console.log(res)
+      switch (res.status) {
+        case 200:
+          setDuplicateEmail(false);
+          break;
+        default:
+          console.warn(`status code: ${res.status}`);
+          break;
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      if (!err.response) {
+        console.log("response가 없습니다.");
+      } else if (err.response.status === 409) {
+        setDuplicateEmail(true);
+      } else {
+        console.warn(`error: ${err.message}`);
+      }
+    }
+  };
 
   const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,8 +109,9 @@ function Register() {
             value={email.value}
             onChange={email.onChange}
             autoComplete={"off"}
+            onBlur={handleEmailExistence}
           />
-          <p className={style.alert}>이미 사용중이거나 탈퇴한 아이디입니다.</p>
+          {duplicateEmail && <p className={style.alert}>이미 사용중이거나 탈퇴한 아이디입니다.</p>}
           <Input
             label={"비밀번호"}
             type={showPassword ? "text" : "password"}
@@ -84,9 +119,9 @@ function Register() {
             onChange={password.onChange}
             autoComplete={"off"}
             innerIcon={renderInnerIcon()}
+            onBlur={handlePasswordBlur}
           />
-          
-          <p className={style.alert}>8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.</p>
+          {!isPasswordValid && <p className={style.success}>8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.</p>}
           <Input
             label={"비밀번호 확인"}
             type={"password"}
@@ -95,7 +130,7 @@ function Register() {
             autoComplete={"off"}
             onBlur={handleConfirmPasswordBlur}
           />
-          <p className={style.alert}>비밀번호가 일치하지 않습니다.</p>
+          {!passwordMatch && <p className={style.alert}>비밀번호가 일치하지 않습니다.</p>}
           <button type="submit">회원가입</button>
           <p>
             회원인가요?<a href="/login">로그인</a>

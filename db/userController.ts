@@ -101,3 +101,25 @@ export async function regenerateToken(reqRefreshToken: string | undefined) {
     return { error: (error as Error).message, code: 401 };
   }
 }
+
+//이메일 확인여부
+export async function checkEmailExistence(email: string) {
+  try {
+    console.log(email);
+    const user = await User.findOne({ email });
+
+    if (user) {
+      return {
+        message: "해당 이메일로 가입한 유저가 있습니다.",
+        code: 409,
+      };
+    }
+
+    return {
+      message: "일치하는 유저가 없습니다.",
+      code: 200,
+    };
+  } catch (error) {
+    return { error: "서버 에러가 발생하였습니다.", code: 500 };
+  }
+}
