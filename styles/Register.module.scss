@@ -1,0 +1,54 @@
+.layout{
+  margin-top: 100px;
+}
+.content {
+  color: #353535;
+  max-width: 340px;
+  margin: 0 auto;
+  h1{
+    text-align: center;
+    font-weight: 600;
+    color: #353535;
+    }
+    p{
+      text-align: center;
+      a{
+        text-decoration: none;
+        color: inherit;
+        color: #212642;
+        font-weight: 600;
+        margin-left: 10px;
+      }
+    }
+}
+.form{
+  div:nth-child(4){
+    position: relative;
+  }
+  .alert{
+    text-align: left;
+    color: #D62929;
+    font-size: 12px;
+    margin-top: 10px ;
+    margin-bottom: 10px;
+  }  
+  button{
+    width: 100%;
+    background: #212642;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .show-password-icon{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 12px;
+    top: 38px;
+    color: #212642;
+    cursor: pointer;
+  }
+}
