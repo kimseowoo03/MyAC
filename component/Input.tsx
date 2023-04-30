@@ -9,6 +9,7 @@ interface InputProps {
   onChange: (event: InputEvent) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   autoComplete: "off";
+  innerIcon?: React.ReactNode
 }
 
 const Input = ({
@@ -19,6 +20,7 @@ const Input = ({
   onChange,
   autoComplete,
   onBlur,
+  innerIcon
 }: InputProps) => {
   return (
     <div className={style["form-input"]}>
@@ -31,6 +33,7 @@ const Input = ({
         autoComplete={autoComplete}
         onBlur={onBlur}
       />
+      {innerIcon}
     </div>
   );
 };
