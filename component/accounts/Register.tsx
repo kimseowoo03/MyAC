@@ -14,6 +14,8 @@ function Register() {
   const confirmPassword = useInput("");
 
   const [duplicateEmail, setDuplicateEmail] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
 
@@ -34,10 +36,15 @@ function Register() {
 
   const handleEmailExistence = async () => {
     try {
+      const emailRegex =
+        /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{3,3}$/i;
+      if (email.value.trim() === "" || !emailRegex.test(email.value))
+        return setIsEmailValid(true)
+
       const res = await axios.post("/api/check-email-exist", {
         email: email.value,
       });
-      console.log(res)
+
       switch (res.status) {
         case 200:
           setDuplicateEmail(false);
@@ -111,7 +118,9 @@ function Register() {
             autoComplete={"off"}
             onBlur={handleEmailExistence}
           />
+          {isEmailValid && <p className={style.alert}>이메일 양식에 맞지 않습니다.</p>}
           {duplicateEmail && <p className={style.alert}>이미 사용중이거나 탈퇴한 아이디입니다.</p>}
+
           <Input
             label={"비밀번호"}
             type={showPassword ? "text" : "password"}
