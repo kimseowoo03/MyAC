@@ -14,32 +14,50 @@ function Register() {
   const confirmPassword = useInput("");
 
   const [duplicateEmail, setDuplicateEmail] = useState(false);
-  const [isEmailValid, setIsEmailValid] = useState(false);
-
-  const [passwordMatch, setPasswordMatch] = useState(true);
-  const [isPasswordValid, setIsPasswordValid] = useState(true);
-
+  const [passwordMatch, setPasswordMatch] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const showPasswordToggle = () => {
     setShowPassword(!showPassword);
   };
 
-  const  handleConfirmPasswordBlur = () => {
-    setPasswordMatch(password.value === confirmPassword.value)
-  }
+  const handleNameBlur = () => {
+    if (!name.value.trim()) {
+      name.onBlurTouch(true)
+    } else {
+      name.onBlurTouch(false)
+    }
+  };
 
-  const  handlePasswordBlur = () => {
-    let reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/
-    setIsPasswordValid(reg.test(password.value.toString()))
-  }
+  const handleConfirmPasswordBlur = () => {
+    if (!confirmPassword.value.trim()) {
+      setPasswordMatch(true);
+    } else {
+      setPasswordMatch(password.value !== confirmPassword.value);
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    const reg =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,16}$/;
+    const trimmedPassword = password.value.trim();
+
+    if (!password.value.trim()) {
+      password.onBlurTouch(true);
+    } else {
+      password.onBlurTouch(reg.test(trimmedPassword));
+    }
+  };
 
   const handleEmailExistence = async () => {
     try {
       const emailRegex =
         /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{3,3}$/i;
-      if (email.value.trim() === "" || !emailRegex.test(email.value))
-        return setIsEmailValid(true)
+      if (!email.value.trim() || !emailRegex.test(email.value)) {
+        email.onBlurTouch(true);
+        setDuplicateEmail(false);
+        return;
+      }
 
       const res = await axios.post("/api/check-email-exist", {
         email: email.value,
@@ -48,6 +66,7 @@ function Register() {
       switch (res.status) {
         case 200:
           setDuplicateEmail(false);
+          email.onBlurTouch(false);
           break;
         default:
           console.warn(`status code: ${res.status}`);
@@ -59,6 +78,7 @@ function Register() {
         console.log("response가 없습니다.");
       } else if (err.response.status === 409) {
         setDuplicateEmail(true);
+        email.onBlurTouch(false);
       } else {
         console.warn(`error: ${err.message}`);
       }
@@ -69,18 +89,18 @@ function Register() {
     event.preventDefault();
     console.log(name.value, email.value, password.value);
     try {
-      const res = await axios.post('/api/register', {
-        "name": "김유나",
-        "email": "kimyuna@gmail.com",
-        "password": "1234567890"
-      })
-      console.log(res)
+      const res = await axios.post("/api/register", {
+        name: "김유나",
+        email: "kimyuna@gmail.com",
+        password: "1234567890",
+      });
+      console.log(res);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
-  const renderInnerIcon =() => {
+  const renderInnerIcon = () => {
     if (showPassword) {
       return (
         <AiFillEye
@@ -96,7 +116,7 @@ function Register() {
         />
       );
     }
-  }
+  };
 
   return (
     <div className={style.layout}>
@@ -109,7 +129,9 @@ function Register() {
             value={name.value}
             onChange={name.onChange}
             autoComplete={"off"}
+            onBlur={handleNameBlur}
           />
+          {name.inputTouched && <p className={style.alert}>이름을 입력해주세요.</p>}
           <Input
             label={"이메일"}
             type={"email"}
@@ -118,8 +140,14 @@ function Register() {
             autoComplete={"off"}
             onBlur={handleEmailExistence}
           />
-          {isEmailValid && <p className={style.alert}>이메일 양식에 맞지 않습니다.</p>}
-          {duplicateEmail && <p className={style.alert}>이미 사용중이거나 탈퇴한 아이디입니다.</p>}
+          {email.inputTouched && (
+            <p className={style.alert}>이메일 양식에 맞지 않습니다.</p>
+          )}
+          {duplicateEmail && (
+            <p className={style.alert}>
+              이미 사용중이거나 탈퇴한 아이디입니다.
+            </p>
+          )}
 
           <Input
             label={"비밀번호"}
@@ -130,7 +158,11 @@ function Register() {
             innerIcon={renderInnerIcon()}
             onBlur={handlePasswordBlur}
           />
-          {!isPasswordValid && <p className={style.success}>8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.</p>}
+          {password.inputTouched && (
+            <p className={style.alert}>
+              8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.
+            </p>
+          )}
           <Input
             label={"비밀번호 확인"}
             type={"password"}
@@ -139,7 +171,9 @@ function Register() {
             autoComplete={"off"}
             onBlur={handleConfirmPasswordBlur}
           />
-          {!passwordMatch && <p className={style.alert}>비밀번호가 일치하지 않습니다.</p>}
+          {passwordMatch && (
+            <p className={style.alert}>비밀번호가 일치하지 않습니다.</p>
+          )}
           <button type="submit">회원가입</button>
           <p>
             회원인가요?<a href="/login">로그인</a>
