@@ -4,19 +4,26 @@ export type InputEvent = ChangeEvent<HTMLInputElement>;
 
 interface UseInputReturn {
   value: string;
+  inputVaild: boolean;
   inputTouched: boolean;
   onChange: (event: InputEvent) => void;
-  onBlurTouch: (x: boolean) => void;
+  onBlurTouch: (touched: boolean) => void;
+  checkVaild: (touched: boolean) => void;
   reset: () => void;
 }
 
 const useInput = (initialForm: string): UseInputReturn => {
   const [value, setValue] = useState(initialForm);
   const [inputTouched, setInputTouched] = useState(false);
+  const [inputVaild, setInputVaild] = useState(false);
 
   const onBlurTouch = (touched: boolean) => {
     setInputTouched(touched);
   };
+
+  const checkVaild = (touched:boolean) => {
+    setInputVaild(touched)
+  }
 
   const onChange = useCallback(
     (event: InputEvent) => {
@@ -27,7 +34,7 @@ const useInput = (initialForm: string): UseInputReturn => {
 
   const reset = useCallback(() => setValue(initialForm), [initialForm]);
 
-  return { value, inputTouched, onChange, onBlurTouch, reset };
+  return { inputVaild, checkVaild, value, inputTouched, onChange, onBlurTouch, reset };
 };
 
 export default useInput;
