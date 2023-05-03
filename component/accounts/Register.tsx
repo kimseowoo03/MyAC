@@ -58,6 +58,7 @@ function Register() {
     if (!trimmedPassword || !reg.test(trimmedPassword)) {
       password.onBlurTouch(true);
       password.checkVaild(false);
+      setPasswordMatch(password.value === confirmPassword.value);
     } else if (trimmedPassword) {
       setPasswordMatch(password.value === confirmPassword.value);
       password.checkVaild(true);
@@ -82,6 +83,7 @@ function Register() {
       switch (res.status) {
         case 200:
           setDuplicateEmail(false);
+          email.onBlurTouch(true);
           email.checkVaild(true);
           break;
         default:

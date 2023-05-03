@@ -1,6 +1,6 @@
-import Register from "../../component/Register";
+import Register from "../../component/accounts/Register";
 
-function MyApp() {
+function RegisterPage() {
   return (
     <>
       <Register />
@@ -8,4 +8,4 @@ function MyApp() {
   );
 }
 
-export default MyApp;
+export default RegisterPage;
