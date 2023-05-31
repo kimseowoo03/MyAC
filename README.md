@@ -1,34 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MyAC
+학점은행제를 사용하고 있는 사람들을 위한 학점 관리 사이트입니다. 이 사이트를 통해 학점 계산 및 관리를 편리하게 할 수 있습니다.
 
-## Getting Started
+<div align='center'>
+<img src="https://github.com/kimseowoo03/MyAC/assets/102151860/a444b4ac-a2f0-4e9f-9b0c-d8f7d9bc03a3" alt="MyAC_logo">
+</div>
 
-First, run the development server:
+## 주요 기능
+1. 학점 이수 계획표<br>
+- 학점 등록, 삭제를 통한 관리
+- 목표 학점을 기준으로 남은 이수 학점을 자동으로 계산하여 사용자에게 제공
 
-```bash
-npm run dev
-# or
-yarn dev
+2. 학점 계산기<br>
+- 학점을 등록한 이력이 있는 경우, "내 학점 불러오기" 기능을 사용하여 등록된 학점 정보를 간편하게 제공
+
+3. 교육원 등록<br>
+- 자신이 다니는 교육원을 검색하고 선택된 교육원 등록
+- 등록된 교육원은 헤더의 바로가기 버튼을 통해 손쉽게 해당 교육원으로 이동
+
+## 개발 환경
+- React, Typescript, scss
+- Next,
+- MongoDB, Mongoose, 
+- HTTP 클라이언트: Axios
+- 상태 관리: Zustand
+- 인증: JWT (JSON Web Tokens)
+
+## 개발 환경 설정
+### Requirements
+ - Node 16.16.0
+ - Npm 8.11.0
+
+### Installation
+1. [MongoDB](https://www.mongodb.com/ko-kr) 사이트에 가입 후, Atlas에서 새로운 프로젝트를 생성해주세요.
+
+2. 저장소 복제
 ```
+git clone https://github.com/kimseowoo03/MyAC.git
+```
+3. NPM 패키지 설치
+```
+npm install
+```
+4. `.env` 추가 설정
+```
+MONGO_URI='ENTER YOUR MONGO_URl'
+```
+## 추가 문서 살펴보기
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [백엔드 API 프로세스 설명서](https://github.com/kimseowoo03/MyAC/blob/main/docs/backend-api-process.md)
