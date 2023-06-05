@@ -60,10 +60,10 @@ userSchema.methods.tokenGenerate = async function () {
 
     //accessToken 생성
     let accessTokenPayload = { id: `${user._id.toHexString()}`, name: `${user.name}`}
-    const accessToken = jwt.sign(accessTokenPayload, "secretToken", { expiresIn: '30m' });
+    const accessToken = jwt.sign(accessTokenPayload, process.env.SECRET_TOKEN!, { expiresIn: '30m' });
 
     //refreshToken 생성
-    const refreshToken = jwt.sign(accessTokenPayload, "secretToken", {expiresIn: '120d'});
+    const refreshToken = jwt.sign(accessTokenPayload, process.env.SECRET_TOKEN!, {expiresIn: '120d'});
 
     // // DB에 refreshToken 저장
     user.token = refreshToken;
