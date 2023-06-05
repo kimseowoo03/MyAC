@@ -28,13 +28,14 @@ function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      console.log("요청")
       const res = await axios.post("/api/login", {
         email: email.value,
         password: password.value,
       });
       setErrorText(false)
-      console.log(res)
+      if(res.status === 200){
+        alert("로그인 성공")
+      }
     } catch (error) {
       const err = error as AxiosError;
       if (!err.response) {

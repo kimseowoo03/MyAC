@@ -102,14 +102,16 @@ function Register() {
 
   const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(name.value, email.value, password.value);
     try {
       const res = await axios.post("/api/register", {
         name: name.value,
         email: email.value,
         password: password.value,
       });
-      console.log(res);
+      if(res.status === 200){
+        alert("회원가입 완료");
+        window.location.href = "/login";
+      }
     } catch (error) {
       const err = error as AxiosError;
       if (!err.response) {
