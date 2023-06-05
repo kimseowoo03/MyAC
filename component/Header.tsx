@@ -10,33 +10,36 @@ const Header = () => {
     setIsToggled(!isToggled);
   };
 
-  const navMenuStyle = isToggled ? style.nav_menu : style.display_none
-  const navUserStyle = isToggled ? style.nav_user : style.display_none
-
   return (
     <header className={style.header}>
-      <nav className={style.nav}>
+      <div className={style.container}>
         <div className={style.nav_loge}>
           <a href="">마이하근</a>
         </div>
-        <ul className={navMenuStyle}>
-          <li>
-            <a>홈</a>
-          </li>
-          <li>
-            <a>학점이수계획표</a>
-          </li>
-          <li>
-            <a>학점계산기</a>
-          </li>
-        </ul>
-        <div className={navUserStyle}>
-          <a>로그인</a>
-        </div>
+        <nav className={isToggled ? style.nav : style["display-none"]}>
+          <ul className={style.nav_menu}>
+            <li>
+              <a>홈</a>
+            </li>
+            <li>
+              <a>학점이수계획표</a>
+            </li>
+            <li>
+              <a>학점계산기</a>
+            </li>
+          </ul>
+          <div className={style.nav_user}>
+            <a href="/login">로그인</a>
+          </div>
+        </nav>
         <a className={style.nav_toogleBtn}>
-          {isToggled ? <FiX onClick={onClickMenuBtn} className={style.nav_toogleBtn} />:<FiMenu onClick={onClickMenuBtn} className={style.nav_toogleBtn} />  }
+          {isToggled ? (
+            <FiX onClick={onClickMenuBtn} className={style.nav_toogleBtn} />
+          ) : (
+            <FiMenu onClick={onClickMenuBtn} className={style.nav_toogleBtn} />
+          )}
         </a>
-      </nav>
+      </div>
     </header>
   );
 };
