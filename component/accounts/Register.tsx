@@ -18,10 +18,6 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
 
   const isFormValid =
-    name.inputTouched &&
-    email.inputTouched &&
-    password.inputTouched &&
-    confirmPassword.inputTouched &&
     name.inputVaild &&
     email.inputVaild &&
     password.inputVaild &&
@@ -35,6 +31,7 @@ function Register() {
   const handleNameBlur = () => {
     if (!name.value.trim()) {
       name.onBlurTouch(true);
+      name.checkVaild(false);
     } else {
       name.checkVaild(true);
     }
@@ -42,7 +39,7 @@ function Register() {
 
   const handleConfirmPasswordBlur = () => {
     if (!confirmPassword.value.trim()) {
-      setPasswordMatch(false);
+      setPasswordMatch(password.value === confirmPassword.value);
       confirmPassword.onBlurTouch(true);
     } else {
       setPasswordMatch(password.value === confirmPassword.value);
@@ -196,7 +193,7 @@ function Register() {
             autoComplete={"off"}
             onBlur={handleConfirmPasswordBlur}
           />
-          {!passwordMatch && confirmPassword.inputTouched && (
+          {!passwordMatch && !confirmPassword.inputTouched && (
             <p className={style.alert}>비밀번호가 일치하지 않습니다.</p>
           )}
           <button disabled={!isFormValid} type="submit">
